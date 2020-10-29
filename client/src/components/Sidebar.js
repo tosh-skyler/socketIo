@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
-import { Tab, Nav } from 'react-bootstrap'
+import { Button, Tab, Nav, Modal } from 'react-bootstrap'
 import Conversations from './Conversations.js'
 import Contacts from './Contacts'
+import NewConversationModal from './NewConversationModal'
+import NewContactModal from './NewContactModal'
 
 const CONVERSATOINS_KEY = 'conversations';
 const CONTACTS_KEY = 'contacts';
 
 export default function Sidebar({ id }) {
     const [activeKey, setActiveKey] = useState(CONVERSATOINS_KEY)
+    const conversationsOpen = activeKey === CONVERSATOINS_KEY
 
     return (
         <div style={{ width: '250px' }} className="d-flex flex-column">
@@ -20,7 +23,7 @@ export default function Sidebar({ id }) {
                         <Nav.Link eventKey={CONTACTS_KEY}>Contacts</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                <Tab.Content>
+                <Tab.Content className="border-right overflow-auto flex-grow-1">
                     <Tab.Pane eventKey={CONVERSATOINS_KEY}>
                         <Conversations />
                     </Tab.Pane>
@@ -28,7 +31,20 @@ export default function Sidebar({ id }) {
                         <Contacts />
                     </Tab.Pane>
                 </Tab.Content>
+                <div className="p-2 border-top border-right small">
+                    Your ID: <span className="text-muted">{id}</span>
+                </div>
+                <Button className="rounded-0">
+                    New {conversationsOpen ? 'Conversation' : 'Contact'}
+                </Button>
             </Tab.Container>
+
+            <Modal>
+                {conversationsOpen ?
+                    <NewConversationModal /> :
+                    <NewContactModal />
+                }
+            </Modal>
         </div>
     )
 }
